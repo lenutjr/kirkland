@@ -129,37 +129,6 @@ local Section = Combat:AddSection({
 })
 
 Combat:AddToggle({
-	Name = "Killaura",
-	Default = false,
-	Callback = function(v)
-		Config.killAura = v
-        spawn(killAura)
-	end    
-})
-
-Combat:AddSlider({
-	Name = "Killaura Range",
-	Min = 5,
-	Max = 20,
-	Default = 5,
-	Color = Color3.fromRGB(255,255,255),
-	Increment = 1,
-	ValueName = "Studs",
-	Callback = function(range)
-		selectedRange = range
-	end    
-})
-
-Combat:AddTextbox({
-	Name = "Killaura Player Exclude",
-	Default = "",
-	TextDisappear = false,
-	Callback = function(chosen)
-		selectedOne = chosen
-	end	  
-})
-
-Combat:AddToggle({
 	Name = "Strafe/LookAt",
 	Default = false,
 	Callback = function(v)
@@ -540,49 +509,6 @@ function jumpPower()
         end
         return newIndex(t,i,v)
     end    
-end
-
-function killAura()
-    while task.wait() and Config.killAura do
-        local Players = game:GetService("Players")
-        local localPlayer = Players.LocalPlayer
-        
-        local function getClosestPlayer()
-            local closestPlayer
-            local shortestDistance = math.huge
-            
-            if not localPlayer.Character or not localPlayer.Character.PrimaryPart then
-                return nil
-            end
-            
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player ~= localPlayer and player.Character and player.Character.PrimaryPart and player.Name ~= selectedOne then
-                    local distance = (player.Character.PrimaryPart.Position - localPlayer.Character.PrimaryPart.Position).magnitude
-                    
-                    if distance < selectedRange and distance < shortestDistance then
-                        closestPlayer = player
-                        shortestDistance = distance
-                    end
-                end
-            end
-            
-            return closestPlayer
-        end
-        
-        local nearestPlayer = getClosestPlayer()
-        
-        if nearestPlayer and nearestPlayer.Character then
-            local args = {{}}
-            
-            for _, v in pairs(nearestPlayer.Character:GetDescendants()) do
-                if v:IsA("MeshPart") then
-                    table.insert(args[1], v)
-                end
-            end
-            
-            game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("SwingTool"):FireServer(unpack(args))
-        end
-    end
 end
 
 function APEssence()
